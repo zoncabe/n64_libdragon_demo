@@ -6,7 +6,7 @@
 #include <math.h>
 
 #include "camera.h"
-#include "cube.h"
+#include "arm_skeletal.h"
 #include "decal.h"
 #include "sphere.h"
 #include "plane.h"
