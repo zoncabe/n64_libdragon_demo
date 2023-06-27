@@ -6,12 +6,12 @@
 #include <math.h>
 
 #include "camera.h"
-#include "arm_skeletal.h"
+#include "cube.h"
 #include "decal.h"
 #include "sphere.h"
 #include "plane.h"
-#include "prim_test.h"
-#include "skinned.h"
+//#include "prim_test.h"
+//#include "skinned.h"
 
 // Set this to 1 to enable rdpq debug output.
 // The demo will only run for a single frame and stop.
@@ -171,16 +171,16 @@ void render()
     glBindTexture(GL_TEXTURE_2D, textures[texture_index]);
     
     render_plane();
-    render_decal();
+    //render_decal();
     render_cube();
-    render_skinned(&camera, animation);
+    //render_skinned(&camera, animation);
 
     glBindTexture(GL_TEXTURE_2D, textures[(texture_index + 1)%4]);
     render_sphere(rotation);
 
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_LIGHTING);
-    render_primitives(rotation);
+    //render_primitives(rotation);
 
     gl_context_end();
 
