@@ -61,8 +61,8 @@ void make_plane_mesh()
             v->position[2] = 0;
 
             v->normal[0] = 0;
-            v->normal[1] = -1;
-            v->normal[2] = 0;
+            v->normal[1] = 0;
+            v->normal[2] = 1;
 
             v->texcoord[0] = x;
             v->texcoord[1] = y;
