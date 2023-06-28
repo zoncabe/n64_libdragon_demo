@@ -57,11 +57,11 @@ void make_plane_mesh()
             vertex_t *v = &vertices[i];
 
             v->position[0] = p0 + incr * x;
-            v->position[1] = 0;
-            v->position[2] = p0 + incr * y;
+            v->position[1] = p0 + incr * y;
+            v->position[2] = 0;
 
             v->normal[0] = 0;
-            v->normal[1] = 1;
+            v->normal[1] = -1;
             v->normal[2] = 0;
 
             v->texcoord[0] = x;

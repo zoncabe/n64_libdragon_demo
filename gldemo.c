@@ -6,12 +6,8 @@
 #include <math.h>
 
 #include "camera.h"
-#include "cube.h"
-#include "decal.h"
-#include "sphere.h"
+#include "dummy_low.h"
 #include "plane.h"
-//#include "prim_test.h"
-//#include "skinned.h"
 
 // Set this to 1 to enable rdpq debug output.
 // The demo will only run for a single frame and stop.
@@ -22,7 +18,7 @@ static uint32_t texture_index = 0;
 static camera_t camera;
 static surface_t zbuffer;
 
-static GLuint textures[4];
+static GLuint textures[5];
 
 static GLenum shade_model = GL_SMOOTH;
 static bool fog_enabled = false;
@@ -51,38 +47,50 @@ static const GLfloat light_diffuse[8][4] = {
     { 1.0f, 1.0f, 1.0f, 1.0f },
 };
 
-static const char *texture_path[4] = {
+static const char *texture_path[5] = {
     "rom:/circle0.sprite",
     "rom:/diamond0.sprite",
     "rom:/pentagon0.sprite",
+    "rom:/skin0.sprite",
     "rom:/triangle0.sprite",
 };
 
-static sprite_t *sprites[4];
+static sprite_t *sprites[5];
+
+
+
+
+
 
 void setup()
 {
-    camera.distance = -10.0f;
+    camera.distance = -50.0f;
     camera.rotation = 0.0f;
 
     zbuffer = surface_alloc(FMT_RGBA16, display_get_width(), display_get_height());
 
-    for (uint32_t i = 0; i < 4; i++)
+
+
+
+
+    for (uint32_t i = 0; i < 5; i++)
     {
         sprites[i] = sprite_load(texture_path[i]);
     }
-
-    setup_sphere();
-    make_sphere_mesh();
 
     setup_cube();
 
     setup_plane();
     make_plane_mesh();
 
+
+
+
+
+
     float aspect_ratio = (float)display_get_width() / (float)display_get_height();
     float near_plane = 1.0f;
-    float far_plane = 50.0f;
+    float far_plane = 5000.0f;
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -90,6 +98,13 @@ void setup()
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+
+
+
+
+
+
+
 
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, environment_color);
     glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
@@ -107,11 +122,22 @@ void setup()
     GLfloat mat_diffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mat_diffuse);
 
+
+
+
+
+
     glFogf(GL_FOG_START, 5);
     glFogf(GL_FOG_END, 20);
     glFogfv(GL_FOG_COLOR, environment_color);
 
-    glGenTextures(4, textures);
+
+
+
+
+
+
+    glGenTextures(5, textures);
 
     #if 0
     GLenum min_filter = GL_LINEAR_MIPMAP_LINEAR;
@@ -120,7 +146,7 @@ void setup()
     #endif
 
 
-    for (uint32_t i = 0; i < 4; i++)
+    for (uint32_t i = 0; i < 5; i++)
     {
         glBindTexture(GL_TEXTURE_2D, textures[i]);
 
@@ -130,6 +156,13 @@ void setup()
         glSpriteTextureN64(GL_TEXTURE_2D, sprites[i], &(rdpq_texparms_t){.s.repeats = REPEAT_INFINITE, .t.repeats = REPEAT_INFINITE});
     }
 }
+
+
+
+
+
+
+
 
 void set_light_positions(float rotation)
 {
@@ -142,6 +175,12 @@ void set_light_positions(float rotation)
     }
     glPopMatrix();
 }
+
+
+
+
+
+
 
 void render()
 {
@@ -168,24 +207,30 @@ void render()
     glEnable(GL_CULL_FACE);
 
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, textures[texture_index]);
-    
-    render_plane();
-    //render_decal();
-    render_cube();
-    //render_skinned(&camera, animation);
+    glBindTexture(GL_TEXTURE_2D, textures[3]);
+    render_cube(); 
 
     glBindTexture(GL_TEXTURE_2D, textures[(texture_index + 1)%4]);
-    render_sphere(rotation);
+    render_plane();
 
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_LIGHTING);
-    //render_primitives(rotation);
 
     gl_context_end();
 
     rdpq_detach_show();
 }
+
+
+
+
+
+
+
+
+
+
+
 
 int main()
 {
@@ -208,9 +253,7 @@ int main()
 
     controller_init();
 
-#if !DEBUG_RDP
     while (1)
-#endif
     {
         controller_scan();
         struct controller_data pressed = get_keys_pressed();
@@ -243,35 +286,17 @@ int main()
         }
 
         if (down.c[0].C_up) {
-            if (sphere_rings < SPHERE_MAX_RINGS) {
-                sphere_rings++;
-            }
-
-            if (sphere_segments < SPHERE_MAX_SEGMENTS) {
-                sphere_segments++;
-            }
-
-            make_sphere_mesh();
         }
 
         if (down.c[0].C_down) {
-            if (sphere_rings > SPHERE_MIN_RINGS) {
-                sphere_rings--;
-            }
-
-            if (sphere_segments > SPHERE_MIN_SEGMENTS) {
-                sphere_segments--;
-            }
-            
-            make_sphere_mesh();
         }
 
         if (down.c[0].C_right) {
             texture_index = (texture_index + 1) % 4;
         }
 
-        float y = pressed.c[0].y / 128.f;
-        float x = pressed.c[0].x / 128.f;
+        float y = pressed.c[0].y/20;
+        float x = pressed.c[0].x/20;
         float mag = x*x + y*y;
 
         if (fabsf(mag) > 0.01f) {

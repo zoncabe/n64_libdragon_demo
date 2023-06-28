@@ -13,8 +13,8 @@ void camera_transform(const camera_t *camera)
     gluLookAt(
         0, -camera->distance, -camera->distance,
         0, 0, 0,
-        0, 1, 0);
-    glRotatef(camera->rotation, 0, 1, 0);
+        0, 0, 1);
+    glRotatef(camera->rotation, 0, 0, 1);
 }
 
 #endif
