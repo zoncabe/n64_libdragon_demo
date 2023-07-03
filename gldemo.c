@@ -14,7 +14,6 @@
 // The demo will only run for a single frame and stop.
 #define DEBUG_RDP 0
 
-static uint32_t animation = 3283;
 static uint32_t texture_index = 0;
 static camera_t camera;
 static surface_t zbuffer;
@@ -104,6 +103,12 @@ float y_pos = 0.0f;
 
 void render()
 {
+
+    if (fog_enabled) {
+        glEnable(GL_FOG);
+    } else {
+        glDisable(GL_FOG);
+    }
     surface_t *disp = display_get();
 
     rdpq_attach(disp, &zbuffer);
@@ -116,9 +121,7 @@ void render()
     glMatrixMode(GL_MODELVIEW);
     camera_transform(&camera);
 
-    float rotation = animation * 0.5f;
-
-    set_light_positions(rotation);
+    set_light_positions(1.0f);
 
     // Set some global render modes that we want to apply to all models
     glEnable(GL_LIGHTING);
@@ -187,15 +190,12 @@ int main()
         struct controller_data down = get_keys_down();
 
         if (pressed.c[0].A) {
-            animation++;
         }
 
         if (pressed.c[0].B) {
-            animation--;
         }
 
         if (down.c[0].start) {
-            debugf("%ld\n", animation);
         }
 
         if (down.c[0].R) {
@@ -205,11 +205,6 @@ int main()
 
         if (down.c[0].L) {
             fog_enabled = !fog_enabled;
-            if (fog_enabled) {
-                glEnable(GL_FOG);
-            } else {
-                glDisable(GL_FOG);
-            }
         }
 
         if (down.c[0].C_up) {
@@ -229,8 +224,6 @@ int main()
         if (fabsf(mag) > 0.01f) {
             x_pos -= (x / 20.0);
             y_pos -= (y / 20.0);
-            //camera.distance += y * 0.2f;
-            //camera.rotation = camera.rotation - x * 1.2f;
         }
 
         render();
