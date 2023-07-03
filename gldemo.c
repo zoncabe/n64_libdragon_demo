@@ -64,7 +64,7 @@ static sprite_t *sprites[5];
 
 void setup()
 {
-    camera.distance = -50.0f;
+    camera.distance = -10.0f;
     camera.rotation = 0.0f;
 
     zbuffer = surface_alloc(FMT_RGBA16, display_get_width(), display_get_height());
@@ -180,7 +180,8 @@ void set_light_positions(float rotation)
 
 
 
-
+float x_pos = 0.0f;
+float y_pos = 0.0f;
 
 void render()
 {
@@ -208,7 +209,14 @@ void render()
 
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, textures[3]);
+
+    glPushMatrix();
+	glScalef(3.f, 3.f, 3.f);
+	glTranslatef(x_pos, y_pos, 0.f);
+
     render_cube(); 
+
+    glPopMatrix();
 
     glBindTexture(GL_TEXTURE_2D, textures[(texture_index + 1)%4]);
     render_plane();
@@ -300,8 +308,10 @@ int main()
         float mag = x*x + y*y;
 
         if (fabsf(mag) > 0.01f) {
-            camera.distance += y * 0.2f;
-            camera.rotation = camera.rotation - x * 1.2f;
+            x_pos -= (x / 20.0);
+            y_pos -= (y / 20.0);
+            //camera.distance += y * 0.2f;
+            //camera.rotation = camera.rotation - x * 1.2f;
         }
 
         render();

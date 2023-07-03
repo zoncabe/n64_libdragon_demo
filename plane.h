@@ -56,8 +56,8 @@ void make_plane_mesh()
             uint32_t i = y * (PLANE_SEGMENTS + 1) + x;
             vertex_t *v = &vertices[i];
 
-            v->position[0] = p0 + incr * x;
-            v->position[1] = p0 + incr * y;
+            v->position[0] = p0 + incr * y;
+            v->position[1] = p0 + incr * x;
             v->position[2] = 0;
 
             v->normal[0] = 0;
