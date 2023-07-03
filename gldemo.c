@@ -23,28 +23,15 @@ static GLuint textures[5];
 static GLenum shade_model = GL_SMOOTH;
 static bool fog_enabled = false;
 
-static const GLfloat environment_color[] = { 0.1f, 0.03f, 0.2f, 1.f };
+static const GLfloat environment_color[] = { 0.6f, 0.7f, 0.6f, 1.f };
 
-static const GLfloat light_pos[8][4] = {
-    { 1, 0, 0, 0 },
-    { -1, 0, 0, 0 },
-    { 0, 0, 1, 0 },
-    { 0, 0, -1, 0 },
-    { 8, 3, 0, 1 },
-    { -8, 3, 0, 1 },
-    { 0, 3, 8, 1 },
-    { 0, 3, -8, 1 },
+#define LIGHT_COUNT 1
+static const GLfloat light_pos[LIGHT_COUNT][4] = {
+    { 1, 0, 0, 0 }
 };
 
-static const GLfloat light_diffuse[8][4] = {
-    { 1.0f, 0.0f, 0.0f, 1.0f },
-    { 0.0f, 1.0f, 0.0f, 1.0f },
-    { 0.0f, 0.0f, 1.0f, 1.0f },
-    { 1.0f, 1.0f, 0.0f, 1.0f },
-    { 1.0f, 0.0f, 1.0f, 1.0f },
-    { 0.0f, 1.0f, 1.0f, 1.0f },
-    { 1.0f, 1.0f, 1.0f, 1.0f },
-    { 1.0f, 1.0f, 1.0f, 1.0f },
+static const GLfloat light_diffuse[LIGHT_COUNT][4] = {
+    { 1.0f, 0.0f, 0.0f, 1.0f }
 };
 
 static const char *texture_path[5] = {
@@ -111,7 +98,7 @@ void setup()
 
     float light_radius = 10.0f;
 
-    for (uint32_t i = 0; i < 8; i++)
+    for (uint32_t i = 0; i < LIGHT_COUNT; i++)
     {
         glEnable(GL_LIGHT0 + i);
         glLightfv(GL_LIGHT0 + i, GL_DIFFUSE, light_diffuse[i]);
@@ -169,7 +156,7 @@ void set_light_positions(float rotation)
     glPushMatrix();
     glRotatef(rotation*5.43f, 0, 1, 0);
 
-    for (uint32_t i = 0; i < 8; i++)
+    for (uint32_t i = 0; i < LIGHT_COUNT; i++)
     {
         glLightfv(GL_LIGHT0 + i, GL_POSITION, light_pos[i]);
     }
