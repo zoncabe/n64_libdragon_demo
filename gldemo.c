@@ -9,6 +9,8 @@
 #include "dummy_low.h"
 #include "plane.h"
 #include "lights.h"
+#include "player_controls.h"
+#include "entity.h"
 
 // Set this to 1 to enable rdpq debug output.
 // The demo will only run for a single frame and stop.
@@ -22,6 +24,8 @@ static GLuint textures[5];
 
 static GLenum shade_model = GL_SMOOTH;
 static bool fog_enabled = false;
+
+struct Entity player;
 
 static const char *texture_path[5] = {
     "rom:/circle0.sprite",
@@ -98,9 +102,6 @@ void setup()
 }
 
 
-float x_pos = 0.0f;
-float y_pos = 0.0f;
-
 void render()
 {
 
@@ -109,6 +110,8 @@ void render()
     } else {
         glDisable(GL_FOG);
     }
+    glShadeModel(shade_model);
+
     surface_t *disp = display_get();
 
     rdpq_attach(disp, &zbuffer);
@@ -134,7 +137,7 @@ void render()
 
     glPushMatrix();
 	glScalef(3.f, 3.f, 3.f);
-	glTranslatef(x_pos, y_pos, 0.f);
+	glTranslatef(player.pos[0], player.pos[1], 0.f);
 
     render_cube(); 
 
@@ -185,46 +188,12 @@ int main()
 
     while (1)
     {
+
         controller_scan();
         struct controller_data pressed = get_keys_pressed();
         struct controller_data down = get_keys_down();
-
-        if (pressed.c[0].A) {
-        }
-
-        if (pressed.c[0].B) {
-        }
-
-        if (down.c[0].start) {
-        }
-
-        if (down.c[0].R) {
-            shade_model = shade_model == GL_SMOOTH ? GL_FLAT : GL_SMOOTH;
-            glShadeModel(shade_model);
-        }
-
-        if (down.c[0].L) {
-            fog_enabled = !fog_enabled;
-        }
-
-        if (down.c[0].C_up) {
-        }
-
-        if (down.c[0].C_down) {
-        }
-
-        if (down.c[0].C_right) {
-            texture_index = (texture_index + 1) % 4;
-        }
-
-        float y = pressed.c[0].y/20;
-        float x = pressed.c[0].x/20;
-        float mag = x*x + y*y;
-
-        if (fabsf(mag) > 0.01f) {
-            x_pos -= (x / 20.0);
-            y_pos -= (y / 20.0);
-        }
+    
+        handle_controller_input_player(pressed, down, &player);
 
         render();
         if (DEBUG_RDP)
