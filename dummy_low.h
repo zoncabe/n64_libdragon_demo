@@ -1,12 +1,12 @@
-#ifndef CUBE_H
-#define CUBE_H
+#ifndef DUMMY_H
+#define DUMMY_H
 
 #include <libdragon.h>
 #include <GL/gl.h>
 #include "vertex.h"
 
 
-static const vertex_t cube_vertices[] = { 
+static const vertex_t dummy_vertices[] = { 
     {.position = { 0.5, 0.5, 2},    .texcoord = { 1.024f, 0.992f},    .normal = { 0.f,  0.f,  1.f}, .color = 0xFF0000FF }, /* 0 */
     {.position = { -0.5, 0.5, 2},    .texcoord = { 0.f, 0.992f},    .normal = { 0.f,  0.f,  1.f}, .color = 0xFF0000FF }, /* 1 */
     {.position = { -0.5, -0.5, 2},    .texcoord = { 0.f, 0.512f},    .normal = { 0.f,  0.f,  1.f}, .color = 0xFF0000FF }, /* 2 */
@@ -38,7 +38,7 @@ static const vertex_t cube_vertices[] = {
     {.position = { 0.5, 0.5, 0},    .texcoord = { 0.f, 0.648f},    .normal = { 0.f,  0.f, -1.f}, .color = 0xFFFF00FF }, /* 23 */
 };
 
-static const uint16_t cube_indices[] = {
+static const uint16_t dummy_indices[] = {
      0,  1,  2,  0,  2,  3,
      4,  5,  6,  4,  6,  7,
      8,  9, 10,  8, 10, 11,
@@ -47,23 +47,23 @@ static const uint16_t cube_indices[] = {
     20, 21, 22, 20, 22, 23,
 };
 
-void setup_cube()
+void setup_dummy()
 {
 }
 
-void draw_cube()
+void draw_dummy()
 {
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
 
-    glVertexPointer(3, GL_FLOAT, sizeof(vertex_t), (void*)(0*sizeof(float) + (void*)cube_vertices));
-    glTexCoordPointer(2, GL_FLOAT, sizeof(vertex_t), (void*)(3*sizeof(float) + (void*)cube_vertices));
-    glNormalPointer(GL_FLOAT, sizeof(vertex_t), (void*)(5*sizeof(float) + (void*)cube_vertices));
-    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(vertex_t), (void*)(8*sizeof(float) + (void*)cube_vertices));
+    glVertexPointer(3, GL_FLOAT, sizeof(vertex_t), (void*)(0*sizeof(float) + (void*)dummy_vertices));
+    glTexCoordPointer(2, GL_FLOAT, sizeof(vertex_t), (void*)(3*sizeof(float) + (void*)dummy_vertices));
+    glNormalPointer(GL_FLOAT, sizeof(vertex_t), (void*)(5*sizeof(float) + (void*)dummy_vertices));
+    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(vertex_t), (void*)(8*sizeof(float) + (void*)dummy_vertices));
 
-    glDrawElements(GL_TRIANGLES, sizeof(cube_indices) / sizeof(uint16_t), GL_UNSIGNED_SHORT, cube_indices);
+    glDrawElements(GL_TRIANGLES, sizeof(dummy_indices) / sizeof(uint16_t), GL_UNSIGNED_SHORT, dummy_indices);
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -71,13 +71,13 @@ void draw_cube()
     glDisableClientState(GL_COLOR_ARRAY);
 }
 
-void render_cube()
+void render_dummy()
 {
-    rdpq_debug_log_msg("Cube");
+    rdpq_debug_log_msg("dummy");
     glPushMatrix();
     glTranslatef(0,0.1f,0);
 
-    draw_cube();
+    draw_dummy();
     
 
     glPopMatrix();
