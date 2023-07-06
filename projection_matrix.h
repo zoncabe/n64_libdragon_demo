@@ -8,9 +8,9 @@
 #include <malloc.h>
 
 
-void setup_projection_matrix(surface_t zbuffer){
+surface_t setup_projection_matrix(){
 
-    zbuffer = surface_alloc(FMT_RGBA16, display_get_width(), display_get_height());
+    surface_t zbuffer = surface_alloc(FMT_RGBA16, display_get_width(), display_get_height());
 
     float aspect_ratio = (float)display_get_width() / (float)display_get_height();
     float near_plane = 1.0f;
@@ -22,6 +22,8 @@ void setup_projection_matrix(surface_t zbuffer){
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+
+    return zbuffer;
 
 }
 

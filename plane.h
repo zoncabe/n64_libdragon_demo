@@ -5,7 +5,6 @@
 #include <GL/gl.h>
 #include <math.h>
 
-#include "vertex.h"
 
 #define PLANE_SIZE       20.0f
 #define PLANE_SEGMENTS   16

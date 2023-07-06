@@ -5,8 +5,8 @@
 #include <GL/gl.h>
 #include <math.h>
 
-#include "vertex.h"
 #include "entity.h"
+
 
 #define SPHERE_RADIUS       1000.0f
 #define SPHERE_MIN_RINGS    4

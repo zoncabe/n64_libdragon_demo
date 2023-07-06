@@ -67,7 +67,7 @@ void move_camera_c_buttons(struct controller_data hold, camera_t *camera){
 }
 
 
-void set_camera_zoom(struct controller_data hold, camera_t *camera){
+void move_camera_zoom(struct controller_data hold, camera_t *camera){
 
     if (hold.c[0].Z && camera->distance_from_entity > 3) {camera->distance_from_entity -= 1;}
     if (hold.c[0].R) {camera->distance_from_entity += 1;}

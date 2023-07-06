@@ -10,9 +10,9 @@
 #include "render.h"
 #include "environment.h"
 #include "materials.h"
+#include "dummy_low.h"
 #include "sphere.h"
 #include "plane.h"
-#include "dummy_low.h"
 #include "controls.h"
 #include "entity.h"
 #include "camera.h"
@@ -61,18 +61,7 @@ struct entity_t dummy = {
 
 void setup(){
 
-    zbuffer = surface_alloc(FMT_RGBA16, display_get_width(), display_get_height());
-
-    float aspect_ratio = (float)display_get_width() / (float)display_get_height();
-    float near_plane = 1.0f;
-    float far_plane = 2000.0f;
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glFrustum(-near_plane*aspect_ratio, near_plane*aspect_ratio, -near_plane, near_plane, near_plane, far_plane);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+    zbuffer = setup_projection_matrix();
 
     setup_textures(textures, sprites, texture_path, TEXTURE_NUMBER);
 
@@ -155,9 +144,8 @@ int main(){
         set_entity_position(&dummy, time_data);
 
         move_camera_c_buttons(hold, &camera);
-        set_camera_zoom(hold, &camera);
+        move_camera_zoom(hold, &camera);
         set_camera_position(&camera, dummy);
-
 
         render();
 
