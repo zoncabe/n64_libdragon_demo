@@ -41,7 +41,6 @@ void render_end(){
     gl_context_end();
 
     rdpq_detach_show();
-
 }
 
 #endif

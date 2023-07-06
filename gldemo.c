@@ -10,12 +10,12 @@
 #include "render.h"
 #include "environment.h"
 #include "materials.h"
-#include "dummy_low.h"
+#include "dummy.h"
 #include "sphere.h"
 #include "plane.h"
-#include "controls.h"
 #include "entity.h"
 #include "camera.h"
+#include "controls.h"
 
 // Set this to 1 to enable rdpq debug output.
 // The demo will only run for a single frame and stop.

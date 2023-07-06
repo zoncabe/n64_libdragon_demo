@@ -18,7 +18,7 @@ void move_entity_stick(struct controller_data hold, struct entity_t* entity, cam
 
 	if ( lx != 0 || ly != 0) {
     	entity->yaw = deg(atan2(lx, -ly) - rad(camera.angle_around_entity));
-        entity->horizontal_speed = fabs(sqrt(lx * lx + ly * ly)) / 100;
+        entity->horizontal_speed = fabs(sqrt(lx * lx + ly * ly)) / 140;
     }
 
     if ( lx == 0 && ly == 0) {
@@ -26,7 +26,7 @@ void move_entity_stick(struct controller_data hold, struct entity_t* entity, cam
     }
 }
 
-void move_camera_stick(struct controller_data hold, camera_t *camera){
+void move_camera_p2_stick(struct controller_data hold, camera_t *camera){
 
     if (fabs(hold.c[1].y) < 7){hold.c[0].y = 0;}
 	if (fabs(hold.c[1].x) < 7){hold.c[0].x = 0;}
@@ -69,7 +69,7 @@ void move_camera_c_buttons(struct controller_data hold, camera_t *camera){
 
 void move_camera_zoom(struct controller_data hold, camera_t *camera){
 
-    if (hold.c[0].Z && camera->distance_from_entity > 3) {camera->distance_from_entity -= 1;}
+    if (hold.c[0].Z && camera->distance_from_entity > 5) {camera->distance_from_entity -= 1;}
     if (hold.c[0].R) {camera->distance_from_entity += 1;}
 }
 
