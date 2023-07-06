@@ -2,7 +2,9 @@ BUILD_DIR=build
 include $(N64_INST)/include/n64.mk
 
 src = gldemo.c
-assets_png = $(wildcard assets/*.png)
+
+assets_png = $(wildcard assets/textures/*.png)
+assets_glm = $(wildcard assets/models/*.glm)
 
 assets_conv = $(addprefix filesystem/,$(notdir $(assets_png:%.png=%.sprite)))
 
@@ -10,7 +12,7 @@ MKSPRITE_FLAGS ?=
 
 all: gldemo.z64
 
-filesystem/%.sprite: assets/%.png
+filesystem/%.sprite: assets/textures/%.png
 	@mkdir -p $(dir $@)
 	@echo "    [SPRITE] $@"
 	@$(N64_MKSPRITE) -f RGBA16 --compress -o "$(dir $@)" "$<"

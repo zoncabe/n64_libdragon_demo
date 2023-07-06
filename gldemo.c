@@ -61,7 +61,7 @@ struct entity_t dummy = {
 
 void setup(){
 
-    zbuffer = setup_projection_matrix();
+    setup_projection_matrix(&zbuffer);
 
     setup_textures(textures, sprites, texture_path, TEXTURE_NUMBER);
 
