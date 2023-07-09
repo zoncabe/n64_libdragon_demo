@@ -5,6 +5,7 @@
 #include <malloc.h>
 #include <math.h>
 
+#include "sausage64.h"
 #include "time.h"
 #include "projection_matrix.h"
 #include "render.h"
@@ -13,6 +14,7 @@
 #include "dummy.h"
 #include "sphere.h"
 #include "plane.h"
+#include "nick.h"
 #include "entity.h"
 #include "camera.h"
 #include "controls.h"
@@ -65,6 +67,8 @@ void setup(){
 
     setup_textures(textures, sprites, texture_path, TEXTURE_NUMBER);
 
+    setup_nick();
+
     setup_sphere();
     make_sphere_mesh();
 
@@ -90,9 +94,8 @@ void render(){
     glPushMatrix();
 	glTranslatef(dummy.position[0], dummy.position[1], dummy.position[2]);
     glRotatef(dummy.yaw, 0, 0, 1);
-	glScalef(1.f, 1.f, 1.f);
-    glBindTexture(GL_TEXTURE_2D, textures[1]);
-    render_dummy(); 
+	glScalef(0.05f, 0.05f, 0.05f);
+    sausage64_drawmodel(&nick); 
     glPopMatrix();
 
     glBindTexture(GL_TEXTURE_2D, textures[0%4]);
@@ -139,6 +142,9 @@ int main(){
         controller_scan();
         struct controller_data hold = get_keys_pressed();
         //struct controller_data press = get_keys_down();
+
+
+        sausage64_advance_anim(&nick, 1.0f);
     
         move_entity_stick(hold, &dummy, camera);
         set_entity_position(&dummy, time_data);

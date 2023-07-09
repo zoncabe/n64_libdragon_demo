@@ -1,10 +1,9 @@
 BUILD_DIR=build
 include $(N64_INST)/include/n64.mk
 
-src = gldemo.c
+src = gldemo.c sausage64.c
 
 assets_png = $(wildcard assets/textures/*.png)
-assets_glm = $(wildcard assets/models/*.glm)
 
 assets_conv = $(addprefix filesystem/,$(notdir $(assets_png:%.png=%.sprite)))
 

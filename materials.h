@@ -34,5 +34,20 @@ void setup_textures(GLuint textures[], sprite_t *sprites[], const char *texture_
 
 }
 
+void generate_s64_texture(s64Texture* tex, GLuint* store, sprite_t* texture)
+{
+    // Create the texture buffer 
+    glGenTextures(1, store);
+    glBindTexture(GL_TEXTURE_2D, *store);
+
+    // Set the texture parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, tex->wraps);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, tex->wrapt);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, tex->filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, tex->filter);
+
+    glSpriteTextureN64(GL_TEXTURE_2D, texture, NULL);
+}
+
 
 #endif
