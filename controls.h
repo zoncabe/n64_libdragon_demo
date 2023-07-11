@@ -17,7 +17,7 @@ void move_entity_stick(struct controller_data hold, struct entity_t* entity, cam
 	float lx = hold.c[0].x ;
 
 	if ( lx != 0 || ly != 0) {
-    	entity->yaw = deg(atan2(lx, -ly) - rad(camera.angle_around_entity));
+    	entity->yaw = deg(atan2(lx, -ly) - rad(camera.angle_around_target));
         entity->horizontal_speed = fabs(sqrt(lx * lx + ly * ly)) / 140;
     }
 
@@ -34,14 +34,14 @@ void move_camera_p2_stick(struct controller_data hold, camera_t *camera){
     float ry = hold.c[1].y ;
 	float rx = hold.c[1].x ;
 
-    camera->angle_around_entity += rx / 20.0f;
-    camera->pitch += ry / 20.0f;
+    camera->angle_around_target += rx / 10.0f;
+    camera->pitch += ry / 10.0f;
 
-    if (camera->angle_around_entity > 360) {camera->angle_around_entity  = 0;}
-    if (camera->angle_around_entity < 0) {camera->angle_around_entity  = 360;}
+    if (camera->angle_around_target > 360) {camera->angle_around_target  = 0;}
+    if (camera->angle_around_target < 0) {camera->angle_around_target  = 360;}
 
-    if (camera->angle_around_entity  > 360) {camera->angle_around_entity  = 0;}
-    if (camera->angle_around_entity  < 0) {camera->angle_around_entity  = 360;}
+    if (camera->angle_around_target  > 360) {camera->angle_around_target  = 0;}
+    if (camera->angle_around_target  < 0) {camera->angle_around_target  = 360;}
 
     if (camera->pitch > 85) {camera->pitch = 85;}
     if (camera->pitch < -85) {camera->pitch = -85;}
@@ -50,17 +50,17 @@ void move_camera_p2_stick(struct controller_data hold, camera_t *camera){
 
 void move_camera_c_buttons(struct controller_data hold, camera_t *camera){
 
-    if (hold.c[0].C_left) {camera->angle_around_entity -= 5.0f;}
-    if (hold.c[0].C_right) {camera->angle_around_entity += 5.0f;}
+    if (hold.c[0].C_left) {camera->angle_around_target -= 5.0f;}
+    if (hold.c[0].C_right) {camera->angle_around_target += 5.0f;}
 
     if (hold.c[0].C_down) {camera->pitch -= 5.0f;}
     if (hold.c[0].C_up) {camera->pitch += 5.0f;}
 
-    if (camera->angle_around_entity > 360) {camera->angle_around_entity  = 0;}
-    if (camera->angle_around_entity < 0) {camera->angle_around_entity  = 360;}
+    if (camera->angle_around_target > 360) {camera->angle_around_target  = 0;}
+    if (camera->angle_around_target < 0) {camera->angle_around_target  = 360;}
 
-    if (camera->angle_around_entity  > 360) {camera->angle_around_entity  = 0;}
-    if (camera->angle_around_entity  < 0) {camera->angle_around_entity  = 360;}
+    if (camera->angle_around_target  > 360) {camera->angle_around_target  = 0;}
+    if (camera->angle_around_target  < 0) {camera->angle_around_target  = 360;}
 
     if (camera->pitch > 85) {camera->pitch = 85;}
     if (camera->pitch < -85) {camera->pitch = -85;}
@@ -69,8 +69,8 @@ void move_camera_c_buttons(struct controller_data hold, camera_t *camera){
 
 void move_camera_zoom(struct controller_data hold, camera_t *camera){
 
-    if (hold.c[0].Z && camera->distance_from_entity > 5) {camera->distance_from_entity -= 1;}
-    if (hold.c[0].R) {camera->distance_from_entity += 1;}
+    if (hold.c[0].Z && camera->distance_from_target > 5) {camera->distance_from_target -= 1;}
+    if (hold.c[0].R) {camera->distance_from_target += 1;}
 }
 
 
@@ -84,7 +84,7 @@ void move_entity_c_buttons(Entity *entity, Camera camera, NUContData cont[1]){
     float side_input = lim(cont[0].button & R_CBUTTONS) - lim(contdata[0].button & L_CBUTTONS);
 
 	if (forward_input != 0 || side_input != 0) {
-    	entity->yaw = deg(atan2(side_input, forward_input) - rad(camera->angle_around_entity));
+    	entity->yaw = deg(atan2(side_input, forward_input) - rad(camera->angle_around_target));
         entity->horizontal_speed = 500;
     }
     

@@ -11,9 +11,6 @@
 #include "render.h"
 #include "environment.h"
 #include "materials.h"
-#include "dummy.h"
-#include "sphere.h"
-#include "plane.h"
 #include "nick.h"
 #include "entity.h"
 #include "camera.h"
@@ -24,6 +21,8 @@
 #define DEBUG_RDP 0
 
 #define TEXTURE_NUMBER 3
+
+#define MODEL_NUMBER 1
 
 static surface_t zbuffer;
 
@@ -39,7 +38,6 @@ static const char *texture_path[TEXTURE_NUMBER] = {
     "rom:/sky0.sprite",
 };
 
-
 static time_data_t time_data;
 
 static light_t light = {
@@ -52,9 +50,11 @@ static light_t light = {
 };
 
 static camera_t camera = {
-    distance_from_entity: 6,
+    distance_from_target: 10,
     pitch: 30,
 };
+
+static model64_t *skybox;
 
 struct entity_t dummy = {
     position: {0, 0, 0,},
@@ -69,15 +69,11 @@ void setup(){
 
     setup_nick();
 
-    setup_sphere();
-    make_sphere_mesh();
-
-    setup_plane();
-    make_plane_mesh();
-
     setup_light(light);
 
     //setup_fog(light);
+
+    skybox = model64_load("rom:/skybox.model64");
     
 }
 
@@ -91,19 +87,17 @@ void render(){
     
     //set_fog();
 
+
     glPushMatrix();
 	glTranslatef(dummy.position[0], dummy.position[1], dummy.position[2]);
     glRotatef(dummy.yaw, 0, 0, 1);
 	glScalef(0.05f, 0.05f, 0.05f);
     sausage64_drawmodel(&nick); 
+
     glPopMatrix();
 
-    glBindTexture(GL_TEXTURE_2D, textures[0%4]);
-    render_plane();
-
-    glBindTexture(GL_TEXTURE_2D, textures[2%4]);
-    render_sphere(dummy);
-
+    model64_draw(skybox);
+  
     render_end();
 }
 
@@ -144,13 +138,13 @@ int main(){
         //struct controller_data press = get_keys_down();
 
 
-        sausage64_advance_anim(&nick, 1.0f);
+        sausage64_advance_anim(&nick, 3.0f);
     
         move_entity_stick(hold, &dummy, camera);
         set_entity_position(&dummy, time_data);
 
-        move_camera_c_buttons(hold, &camera);
-        move_camera_zoom(hold, &camera);
+        move_camera_p2_stick(hold, &camera);
+        //move_camera_zoom(hold, &camera);
         set_camera_position(&camera, dummy);
 
         render();
