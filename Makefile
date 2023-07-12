@@ -4,10 +4,10 @@ include $(N64_INST)/include/n64.mk
 src = gldemo.c sausage64.c
 
 assets_png = $(wildcard assets/textures/*.png)
-assets_gltf = $(wildcard assets/models/*.glb)
+assets_gltf = $(wildcard assets/models/*.gltf)
 
 assets_conv = $(addprefix filesystem/,$(notdir $(assets_png:%.png=%.sprite)))\
-              $(addprefix filesystem/,$(notdir $(assets_gltf:%.glb=%.model64)))
+              $(addprefix filesystem/,$(notdir $(assets_gltf:%.gltf=%.model64)))
 
 MKSPRITE_FLAGS ?=
 
@@ -18,7 +18,7 @@ filesystem/%.sprite: assets/textures/%.png
 	@echo "    [SPRITE] $@"
 	@$(N64_MKSPRITE) -f RGBA16 --compress -o "$(dir $@)" "$<"
 
-filesystem/%.model64: assets/models/%.glb
+filesystem/%.model64: assets/models/%.gltf
 	@mkdir -p $(dir $@)
 	@echo "    [MODEL] $@"
 	@$(N64_MKMODEL) -o "$(dir $@)" "$<"

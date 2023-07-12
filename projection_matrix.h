@@ -14,7 +14,7 @@ void setup_projection_matrix(surface_t *zbuffer){
 
     float aspect_ratio = (float)display_get_width() / (float)display_get_height();
     float near_plane = 1.0f;
-    float far_plane = 2000.0f;
+    float far_plane = 1500.0f;
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();

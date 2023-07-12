@@ -31,6 +31,7 @@ void render_init(GLenum shade_model, surface_t zbuffer, light_t light){
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glEnable(GL_TEXTURE_2D);
+    glEnable(GL_COLOR_MATERIAL);
 }
 
 void render_end(){

@@ -54,7 +54,7 @@ static camera_t camera = {
     pitch: 30,
 };
 
-static model64_t *skybox;
+static model64_t *assets;
 
 struct entity_t dummy = {
     position: {0, 0, 0,},
@@ -73,7 +73,7 @@ void setup(){
 
     //setup_fog(light);
 
-    skybox = model64_load("rom:/skybox.model64");
+    assets = model64_load("rom:/assets.model64");
     
 }
 
@@ -93,10 +93,25 @@ void render(){
     glRotatef(dummy.yaw, 0, 0, 1);
 	glScalef(0.05f, 0.05f, 0.05f);
     sausage64_drawmodel(&nick); 
-
     glPopMatrix();
 
-    model64_draw(skybox);
+    glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+    glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0);
+
+    glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+    glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0);
+
+    glPushMatrix();
+	glTranslatef(dummy.position[0], dummy.position[1], dummy.position[2]);
+    glColor3f(0.400, 0.800, 1.000);
+    model64_draw_mesh(model64_get_mesh(assets, 0));
+    glPopMatrix();
+
+    glPushMatrix();
+	//glTranslatef(dummy.position[0], dummy.position[1], dummy.position[2]);
+    glColor3f(0.123, 0.823, 0.123);
+    model64_draw_mesh(model64_get_mesh(assets, 1));
+    glPopMatrix();
   
     render_end();
 }
@@ -144,7 +159,7 @@ int main(){
         set_entity_position(&dummy, time_data);
 
         move_camera_p2_stick(hold, &camera);
-        //move_camera_zoom(hold, &camera);
+        move_camera_zoom(hold, &camera);
         set_camera_position(&camera, dummy);
 
         render();
