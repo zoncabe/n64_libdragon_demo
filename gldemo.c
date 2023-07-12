@@ -13,6 +13,7 @@
 #include "materials.h"
 #include "nick.h"
 #include "entity.h"
+#include "states.h"
 #include "camera.h"
 #include "controls.h"
 
@@ -56,8 +57,10 @@ static camera_t camera = {
 
 static model64_t *assets;
 
-struct entity_t dummy = {
+struct entity_t nick = {
     position: {0, 0, 0,},
+    type: NICK,
+    state: STAND,
 };
 
 
@@ -73,26 +76,55 @@ void setup(){
 
     //setup_fog(light);
 
+    void animcallback(u16 anim){
+
+        /*
+        switch(anim)
+        {   
+            case ANIMATION_nick_walk_left:
+            case ANIMATION_nick_run_left:
+            case ANIMATION_nick_stand_to_roll_left:
+            case ANIMATION_nick_run_to_roll_left :
+                sausage64_set_anim(&nick_model, ANIMATION_nick_look_around_left);
+                break;
+        */
+        
+        entity_animcallback(&nick);
+    }
+
+    sausage64_set_animcallback(&nick.model, animcallback);
+
     assets = model64_load("rom:/assets.model64");
     
 }
 
 void render(){
 
+    glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+    glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0);
+
+    glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+    glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0);
+
+    glPushMatrix();
+	glTranslatef(nick.position[0], nick.position[1], nick.position[2]);
+    glColor3f(0.400, 0.950, 1.000);
+    model64_draw_mesh(model64_get_mesh(assets, 0));
+    glPopMatrix();
+
     render_init(shade_model, zbuffer, light);
 
     set_light(light);
 
-    set_camera(camera, dummy);
+    set_camera(camera, nick);
     
     //set_fog();
 
-
     glPushMatrix();
-	glTranslatef(dummy.position[0], dummy.position[1], dummy.position[2]);
-    glRotatef(dummy.yaw, 0, 0, 1);
+	glTranslatef(nick.position[0], nick.position[1], nick.position[2]);
+    glRotatef(nick.yaw, 0, 0, 1);
 	glScalef(0.05f, 0.05f, 0.05f);
-    sausage64_drawmodel(&nick); 
+    sausage64_drawmodel(&nick_model); 
     glPopMatrix();
 
     glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
@@ -102,13 +134,14 @@ void render(){
     glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0);
 
     glPushMatrix();
-	glTranslatef(dummy.position[0], dummy.position[1], dummy.position[2]);
+	glTranslatef(nick.position[0], nick.position[1], nick.position[2]);
     glColor3f(0.400, 0.950, 1.000);
     model64_draw_mesh(model64_get_mesh(assets, 0));
     glPopMatrix();
 
     glPushMatrix();
-	//glTranslatef(dummy.position[0], dummy.position[1], dummy.position[2]);
+	//glTranslatef(nick.position[0], nick.position[1], nick.position[2]);
+	//glScalef(0.1f, 0.1f, 0.1f);
     glColor3f(0.123, 0.823, 0.123);
     model64_draw_mesh(model64_get_mesh(assets, 1));
     glPopMatrix();
@@ -153,14 +186,17 @@ int main(){
         //struct controller_data press = get_keys_down();
 
 
-        sausage64_advance_anim(&nick, 3.0f);
+        sausage64_advance_anim(&nick_model, 3.0f);
     
-        move_entity_stick(hold, &dummy, camera);
-        set_entity_position(&dummy, time_data);
+        move_entity_stick(hold, &nick, camera);
+        set_entity_position(&nick, time_data);
 
         move_camera_p2_stick(hold, &camera);
+
+        state_handler(&nick);
+
         move_camera_zoom(hold, &camera);
-        set_camera_position(&camera, dummy);
+        set_camera_position(&camera, nick);
 
         render();
 

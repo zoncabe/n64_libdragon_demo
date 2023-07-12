@@ -8,6 +8,26 @@
 #include "time.h"
 
 
+typedef enum {
+
+	NICK
+
+} entity_type_t;
+
+
+typedef enum { 
+
+	WALK,
+	RUN,
+	ROLL,
+	JUMP,
+	FALL,
+	CROUCH,
+	STAND
+
+} entity_state_t;
+
+
 struct entity_t {
 
 	float position[3];
@@ -16,8 +36,11 @@ struct entity_t {
 
 	float horizontal_speed;
 	float vertical_speed;
-	float forward_speed;
-	float side_speed;
+	
+	entity_type_t type;
+	entity_state_t state;
+
+	s64ModelHelper model;
 };
 
 
