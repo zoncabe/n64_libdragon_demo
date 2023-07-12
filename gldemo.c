@@ -11,9 +11,9 @@
 #include "render.h"
 #include "environment.h"
 #include "materials.h"
-#include "nick.h"
 #include "entity.h"
-#include "states.h"
+#include "nick.h"
+#include "state.h"
 #include "camera.h"
 #include "controls.h"
 
@@ -57,12 +57,6 @@ static camera_t camera = {
 
 static model64_t *assets;
 
-struct entity_t nick = {
-    position: {0, 0, 0,},
-    type: NICK,
-    state: STAND,
-};
-
 
 void setup(){
 
@@ -78,17 +72,17 @@ void setup(){
 
     void animcallback(u16 anim){
 
-        /*
-        switch(anim)
+        
+        /*switch(anim)
         {   
             case ANIMATION_nick_walk_left:
             case ANIMATION_nick_run_left:
             case ANIMATION_nick_stand_to_roll_left:
             case ANIMATION_nick_run_to_roll_left :
-                sausage64_set_anim(&nick_model, ANIMATION_nick_look_around_left);
+                sausage64_set_anim(&nick.model, ANIMATION_nick_look_around_left);
                 break;
-        */
         
+        }*/
         entity_animcallback(&nick);
     }
 
@@ -124,7 +118,7 @@ void render(){
 	glTranslatef(nick.position[0], nick.position[1], nick.position[2]);
     glRotatef(nick.yaw, 0, 0, 1);
 	glScalef(0.05f, 0.05f, 0.05f);
-    sausage64_drawmodel(&nick_model); 
+    sausage64_drawmodel(&nick.model); 
     glPopMatrix();
 
     glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
@@ -184,16 +178,22 @@ int main(){
         controller_scan();
         struct controller_data hold = get_keys_pressed();
         //struct controller_data press = get_keys_down();
-
-
-        sausage64_advance_anim(&nick_model, 3.0f);
     
         move_entity_stick(hold, &nick, camera);
         set_entity_position(&nick, time_data);
 
         move_camera_p2_stick(hold, &camera);
 
-        state_handler(&nick);
+        //state_handler(&nick);
+
+        if (fabs(nick.horizontal_speed) > 0){
+            if (nick.state != WALK){
+                nick.state = WALK;
+                sausage64_set_anim(&nick.model, ANIMATION_nick_walk_left);   
+            }
+        }
+
+        sausage64_advance_anim(&nick.model, 3.0f);
 
         move_camera_zoom(hold, &camera);
         set_camera_position(&camera, nick);

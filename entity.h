@@ -11,7 +11,6 @@
 typedef enum {
 
 	NICK
-
 } entity_type_t;
 
 
@@ -24,7 +23,6 @@ typedef enum {
 	FALL,
 	CROUCH,
 	STAND
-
 } entity_state_t;
 
 
@@ -50,7 +48,6 @@ void set_entity_position(struct entity_t* entity, time_data_t time_data){
 
     entity->position[0] += horizontal_distance * sin(rad(entity->yaw));
     entity->position[1] -= horizontal_distance * cos(rad(entity->yaw));
-
 }
 
 

@@ -18172,6 +18172,12 @@ static s64ModelData mdl_nick = {36, 41, meshes_nick, anims_nick};
 
 
 
+struct entity_t nick = {
+    position: {0, 0, 0,},
+    type: NICK,
+    state: STAND,
+};
+
 // model buffers
 static s64ModelHelper nick_model;
 static GLuint nick_buffers[MESHCOUNT_nick*2];
@@ -18189,9 +18195,10 @@ void setup_nick()
     for (uint32_t i=0; i<NICK_TEXTURE_COUNT; i++)
         nick_textures[i] = sprite_load(nick_texture_paths[i]);
     
-    // Initialize nick's model, then set her animation and predraw function
-    sausage64_initmodel(&nick_model, MODEL_nick, nick_buffers);
-    sausage64_set_anim(&nick_model, ANIMATION_nick_stand_idle_left);
+    nick.model = nick_model;
+
+    sausage64_initmodel(&nick.model, MODEL_nick, nick_buffers);
+    sausage64_set_anim(&nick.model, ANIMATION_nick_stand_idle_left);
 
     // Generate the textures
     generate_s64_texture((s64Texture*)mat_black.data, &black, nick_textures[0]);
