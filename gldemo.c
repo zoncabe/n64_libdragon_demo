@@ -103,7 +103,7 @@ void render(){
 
     glPushMatrix();
 	glTranslatef(dummy.position[0], dummy.position[1], dummy.position[2]);
-    glColor3f(0.400, 0.800, 1.000);
+    glColor3f(0.400, 0.950, 1.000);
     model64_draw_mesh(model64_get_mesh(assets, 0));
     glPopMatrix();
 
