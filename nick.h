@@ -18177,6 +18177,8 @@ struct entity_t nick = {
     type: NICK,
     state: STAND,
     new_state: STAND,
+    acceleration: {0, 0, 0,},
+	speed: {0, 0, 0,},
 };
 
 // model buffers

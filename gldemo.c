@@ -39,6 +39,8 @@ static const char *texture_path[TEXTURE_NUMBER] = {
     "rom:/sky0.sprite",
 };
 
+rdpq_font_t *font;
+
 static time_data_t time_data;
 
 static light_t light = {
@@ -66,9 +68,14 @@ void setup(){
 
     setup_nick();
 
+    void animcallback(u16 anim){entity_animcallback(&nick);}
+    sausage64_set_animcallback(&nick.model, animcallback);
+
     setup_light(light);
 
     assets = model64_load("rom:/assets.model64");
+
+    font = rdpq_font_load("rom:/UbuntuMono-R.font64");
     
 }
 
@@ -119,8 +126,31 @@ void render(){
     glColor3f(0.123, 0.823, 0.123);
     model64_draw_mesh(model64_get_mesh(assets, 1));
     glPopMatrix();
-  
-    render_end();
+
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_LIGHTING);
+
+    gl_context_end();
+
+    rdpq_font_begin(RGBA32(0xED, 0xAE, 0x49, 0xFF));
+
+    rdpq_font_position(5, 10);
+    rdpq_font_printf(font, "FPS: %f\n", time_data.FPS);
+
+    rdpq_font_position(5, 20);
+    rdpq_font_printf(font, ": %f\n", nick.target_yaw);
+
+    rdpq_font_position(5, 30);
+    rdpq_font_printf(font, ": %d\n", nick.new_state);
+
+    rdpq_font_position(5, 40);
+    rdpq_font_printf(font, ": %f\n", nick.target_speed[0]);
+    
+    rdpq_font_end();
+
+    rdpq_detach_show();
+
+    //render_end();
 }
 
 
@@ -129,16 +159,14 @@ int main(){
 	debug_init_isviewer();
 	debug_init_usblog();
 
-    console_init();
-    console_set_render_mode(RENDER_MANUAL);
-
     timer_init();
     
     dfs_init(DFS_DEFAULT_LOCATION);
-
     display_init(RESOLUTION_320x240, DEPTH_16_BPP, 3, GAMMA_NONE, ANTIALIAS_RESAMPLE_FETCH_ALWAYS);
 
     rdpq_init();
+
+    rdpq_debug_start();
 
     gl_init();
 

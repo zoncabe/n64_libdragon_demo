@@ -25,40 +25,47 @@ void move_entity_stick(struct controller_data hold, struct entity_t* entity, cam
 	float ly = hold.c[0].y ;
 	float lx = hold.c[0].x ;
 
-    entity->target_yaw = deg(atan2(lx, -ly) - rad(camera.angle_around_target));
+    float input_amount = fabs(sqrt(lx * lx + ly * ly));
 
-    float input_amount = fabs(sqrt(lx * lx + ly * ly)) / 100;
+    entity->target_yaw = deg(atan2(lx, -ly) - rad(camera.angle_around_target));
 
     if (input_amount == 0) {
 
-
         entity->target_speed[0] = 0;
         entity->target_speed[1] = 0;
+
+        entity->acceleration[0] = 15 * (entity->target_speed[0] - entity->speed[0]);
+        entity->acceleration[1] = 15 * (entity->target_speed[1] - entity->speed[1]);
+
+        entity->new_state = STAND;
     }
     else
-	if (input_amount > 0 /*&& input_amount < 20*/) {
+	if (input_amount > 0 && input_amount < 80) {
 
-        entity->target_speed[0] = 2 * sin(entity->target_yaw);
-        entity->target_speed[1] = 2 * -cos(entity->target_yaw);
+        entity->target_speed[0] = 10 * sin(rad(entity->target_yaw));
+        entity->target_speed[1] = 10 * -cos(rad(entity->target_yaw));
+
+        entity->acceleration[0] = 8 * (entity->target_speed[0] - entity->speed[0]);
+        entity->acceleration[1] = 8 * (entity->target_speed[1] - entity->speed[1]);
+
+        entity->new_state = WALK;
+    }
+    else
+    if (input_amount >= 80){
+
+        entity->target_speed[0] = 25 * sin(rad(entity->target_yaw));
+        entity->target_speed[1] = 25 * -cos(rad(entity->target_yaw));
+
+        entity->acceleration[0] = 8 * (entity->target_speed[0] - entity->speed[0]);
+        entity->acceleration[1] = 8 * (entity->target_speed[1] - entity->speed[1]);
 
         entity->new_state = RUN;
-    }
-
-    if (input_amount == 0){
-        entity->acceleration[0] = (entity->target_speed[0] - entity->speed[0]);
-        entity->acceleration[1] = (entity->target_speed[1] - entity->speed[1]);
-    }
-    else
-    if (input_amount > 0){
-        entity->acceleration[0] = (entity->target_speed[0] - entity->speed[0]);
-        entity->acceleration[1] = (entity->target_speed[1] - entity->speed[1]);
     }
 
     acceleration_to_speed(entity, time_data);
 
     if (entity->speed[0] != 0 || entity->speed[1] != 0) entity->yaw = deg(atan2(entity->speed[0], -entity->speed[1]));
         
-    if (entity->speed[0] == 0 && entity->speed[1] == 0 && entity->speed[2] == 0)  entity->new_state = STAND;
 }
 
 
