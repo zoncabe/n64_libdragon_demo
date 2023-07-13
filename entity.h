@@ -30,13 +30,19 @@ struct entity_t {
 
 	float position[3];
 	float pitch;
+
+	float target_yaw;
 	float yaw;
 
-	float horizontal_speed;
-	float vertical_speed;
+	float force[3];
+	float acceleration[3];
+
+	float target_speed[3];
+	float speed[3];
 	
 	entity_type_t type;
 	entity_state_t state;
+	entity_state_t new_state;
 
 	s64ModelHelper model;
 };
@@ -44,10 +50,9 @@ struct entity_t {
 
 void set_entity_position(struct entity_t* entity, time_data_t time_data){
 
-    float horizontal_distance = time_data.frame_duration * entity->horizontal_speed;
-
-    entity->position[0] += horizontal_distance * sin(rad(entity->yaw));
-    entity->position[1] -= horizontal_distance * cos(rad(entity->yaw));
+    entity->position[0] += entity->speed[0] * time_data.frame_duration;
+    entity->position[1] += entity->speed[1] * time_data.frame_duration;
+    entity->position[2] += entity->speed[2] * time_data.frame_duration;
 }
 
 

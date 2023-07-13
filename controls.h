@@ -1,5 +1,5 @@
-#ifndef PLAYER_CONTROLS_H
-#define PLAYER_CONTROLS_H
+#ifndef entity_CONTROLS_H
+#define entity_CONTROLS_H
 
 #include <libdragon.h>
 #include <math.h>
@@ -8,7 +8,16 @@
 #include "camera.h"
 
 
-void move_entity_stick(struct controller_data hold, struct entity_t* entity, camera_t camera) {
+void acceleration_to_speed(struct entity_t *entity, time_data_t time_data){
+
+    entity->speed[0] += (entity->acceleration[0] * time_data.frame_duration);
+    entity->speed[1] += (entity->acceleration[1] * time_data.frame_duration);
+    entity->speed[2] += (entity->acceleration[2] * time_data.frame_duration);
+
+}
+
+
+void move_entity_stick(struct controller_data hold, struct entity_t* entity, camera_t camera, time_data_t time_data) {
 
 	if (fabs(hold.c[0].y) < 7){hold.c[0].y = 0;}
 	if (fabs(hold.c[0].x) < 7){hold.c[0].x = 0;}
@@ -16,15 +25,42 @@ void move_entity_stick(struct controller_data hold, struct entity_t* entity, cam
 	float ly = hold.c[0].y ;
 	float lx = hold.c[0].x ;
 
-	if ( lx != 0 || ly != 0) {
-    	entity->yaw = deg(atan2(lx, -ly) - rad(camera.angle_around_target));
-        entity->horizontal_speed = fabs(sqrt(lx * lx + ly * ly)) / 140;
+    entity->target_yaw = deg(atan2(lx, -ly) - rad(camera.angle_around_target));
+
+    float input_amount = fabs(sqrt(lx * lx + ly * ly)) / 100;
+
+    if (input_amount == 0) {
+
+
+        entity->target_speed[0] = 0;
+        entity->target_speed[1] = 0;
+    }
+    else
+	if (input_amount > 0 /*&& input_amount < 20*/) {
+
+        entity->target_speed[0] = 2 * sin(entity->target_yaw);
+        entity->target_speed[1] = 2 * -cos(entity->target_yaw);
+
+        entity->new_state = RUN;
     }
 
-    if ( lx == 0 && ly == 0) {
-        entity->horizontal_speed = 0;
+    if (input_amount == 0){
+        entity->acceleration[0] = (entity->target_speed[0] - entity->speed[0]);
+        entity->acceleration[1] = (entity->target_speed[1] - entity->speed[1]);
     }
+    else
+    if (input_amount > 0){
+        entity->acceleration[0] = (entity->target_speed[0] - entity->speed[0]);
+        entity->acceleration[1] = (entity->target_speed[1] - entity->speed[1]);
+    }
+
+    acceleration_to_speed(entity, time_data);
+
+    if (entity->speed[0] != 0 || entity->speed[1] != 0) entity->yaw = deg(atan2(entity->speed[0], -entity->speed[1]));
+        
+    if (entity->speed[0] == 0 && entity->speed[1] == 0 && entity->speed[2] == 0)  entity->new_state = STAND;
 }
+
 
 void move_camera_p2_stick(struct controller_data hold, camera_t *camera){
 
@@ -93,8 +129,6 @@ void move_entity_c_buttons(Entity *entity, Camera camera, NUContData cont[1]){
     }
 }
 
-void handle_controller_input_player(struct controller_data hold, struct controller_data hold, struct entity_t* player) {
-
   if (hold.c[0].A) {}
 
   if (hold.c[0].B) {}
@@ -116,7 +150,7 @@ void handle_controller_input_player(struct controller_data hold, struct controll
 
   float ry = hold.c[1].y;
   float rx = hold.c[1].x;0  
-}
+
 ==============================*/
 
 

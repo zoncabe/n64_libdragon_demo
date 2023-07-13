@@ -18,98 +18,62 @@ void set_animation(struct entity_t *entity) {
 }
 
 
-void set_entity_state(struct entity_t *entity, entity_state_t new_state) {
+void set_entity_state(struct entity_t *entity) {
     
-    if (entity->state == new_state){
+    if (entity->state == entity->new_state){
         return;
     }
 
-    if (new_state == WALK && 
+    if (entity->new_state == WALK && 
               (  entity->state == STAND
               || entity->state == RUN)){
 
-        entity->state = new_state;
+        entity->state = entity->new_state;
         set_animation(entity);
     }
 
-    if (new_state == RUN && 
+    if (entity->new_state == RUN && 
               (  entity->state == STAND
               || entity->state == WALK)){
 
-        entity->state = new_state;
+        entity->state = entity->new_state;
         set_animation(entity);
     }
 
-    if (new_state == ROLL && 
+    if (entity->new_state == ROLL && 
               (  entity->state == STAND 
               || entity->state == WALK 
               || entity->state == RUN)){
 
-        entity->state = new_state;
+        entity->state = entity->new_state;
         set_animation(entity);
     }
 
-    if (new_state == JUMP && 
+    if (entity->new_state == JUMP && 
               (  entity->state == STAND
               || entity->state == WALK
               || entity->state == RUN)){
 
-        entity->state = new_state;
+        entity->state = entity->new_state;
         set_animation(entity);
     }
 
-	    if (new_state == CROUCH && 
+	    if (entity->new_state == CROUCH && 
 				entity->state == STAND){
 
-        entity->state = new_state;
+        entity->state = entity->new_state;
         set_animation(entity);
     }
 
 
-    if (new_state == STAND && 
+    if (entity->new_state == STAND && 
               (  entity->state == WALK
               || entity->state == RUN
               || entity->state == ROLL 
               || entity->state == JUMP)){
 
-        entity->state = new_state;
+        entity->state = entity->new_state;
         set_animation(entity);
-    }
-}
-
-
-void entity_animcallback(struct entity_t *entity){
-
-    switch(entity->state)
-    {
-
-		case STAND: set_entity_state(entity, STAND); break;
-
-		case CROUCH: set_entity_state(entity, CROUCH); break;
-
-		case WALK: set_entity_state(entity, STAND); break;
-
-		case RUN: set_entity_state(entity, STAND); break;
-
-        case ROLL: set_entity_state(entity, STAND); break;
-
-        case JUMP: set_entity_state(entity, FALL); break;
-
-        case FALL: set_entity_state(entity, STAND); break;
-    }
-}
-
-
-void state_handler(struct entity_t *entity){
-
-    if (fabs(entity->horizontal_speed) > 0){
-
-        set_entity_state(entity, WALK);   
-    }
-
-    else if (fabs(entity->horizontal_speed) > 20){
-
-        set_entity_state(entity, RUN);   
     }
 }
 

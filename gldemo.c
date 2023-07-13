@@ -68,26 +68,6 @@ void setup(){
 
     setup_light(light);
 
-    //setup_fog(light);
-
-    void animcallback(u16 anim){
-
-        
-        /*switch(anim)
-        {   
-            case ANIMATION_nick_walk_left:
-            case ANIMATION_nick_run_left:
-            case ANIMATION_nick_stand_to_roll_left:
-            case ANIMATION_nick_run_to_roll_left :
-                sausage64_set_anim(&nick.model, ANIMATION_nick_look_around_left);
-                break;
-        
-        }*/
-        entity_animcallback(&nick);
-    }
-
-    sausage64_set_animcallback(&nick.model, animcallback);
-
     assets = model64_load("rom:/assets.model64");
     
 }
@@ -179,21 +159,13 @@ int main(){
         struct controller_data hold = get_keys_pressed();
         //struct controller_data press = get_keys_down();
     
-        move_entity_stick(hold, &nick, camera);
+        move_entity_stick(hold, &nick, camera, time_data);
         set_entity_position(&nick, time_data);
+        set_entity_state(&nick);
 
         move_camera_p2_stick(hold, &camera);
 
-        //state_handler(&nick);
-
-        if (fabs(nick.horizontal_speed) > 0){
-            if (nick.state != WALK){
-                nick.state = WALK;
-                sausage64_set_anim(&nick.model, ANIMATION_nick_walk_left);   
-            }
-        }
-
-        sausage64_advance_anim(&nick.model, 3.0f);
+        sausage64_advance_anim(&nick.model, 2.0f);
 
         move_camera_zoom(hold, &camera);
         set_camera_position(&camera, nick);
