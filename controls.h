@@ -31,13 +31,17 @@ void move_entity_stick(struct controller_data hold, struct entity_t* entity, cam
 
     if (input_amount == 0) {
 
+        if  (fabs(entity->speed[0]) < 0.1f && fabs(entity->speed[1]) < 0.1f){
+            entity->speed[0] = 0;
+            entity->speed[1] = 0;
+            entity->new_state = STAND;
+        }
+
         entity->target_speed[0] = 0;
         entity->target_speed[1] = 0;
 
-        entity->acceleration[0] = 15 * (entity->target_speed[0] - entity->speed[0]);
-        entity->acceleration[1] = 15 * (entity->target_speed[1] - entity->speed[1]);
-
-        entity->new_state = STAND;
+        entity->acceleration[0] = 8 * (entity->target_speed[0] - entity->speed[0]);
+        entity->acceleration[1] = 8 * (entity->target_speed[1] - entity->speed[1]);
     }
     else
 	if (input_amount > 0 && input_amount < 80) {
@@ -80,11 +84,8 @@ void move_camera_p2_stick(struct controller_data hold, camera_t *camera){
     camera->angle_around_target += rx / 10.0f;
     camera->pitch += ry / 10.0f;
 
-    if (camera->angle_around_target > 360) {camera->angle_around_target  = 0;}
-    if (camera->angle_around_target < 0) {camera->angle_around_target  = 360;}
-
-    if (camera->angle_around_target  > 360) {camera->angle_around_target  = 0;}
-    if (camera->angle_around_target  < 0) {camera->angle_around_target  = 360;}
+    if (camera->angle_around_target > 360) {camera->angle_around_target  = camera->angle_around_target - 360;}
+    if (camera->angle_around_target < 0) {camera->angle_around_target  = camera->angle_around_target + 360;}
 
     if (camera->pitch > 85) {camera->pitch = 85;}
     if (camera->pitch < -85) {camera->pitch = -85;}
@@ -96,14 +97,11 @@ void move_camera_c_buttons(struct controller_data hold, camera_t *camera){
     if (hold.c[0].C_left) {camera->angle_around_target -= 5.0f;}
     if (hold.c[0].C_right) {camera->angle_around_target += 5.0f;}
 
-    if (hold.c[0].C_down) {camera->pitch -= 5.0f;}
+    if (camera->angle_around_target > 360) {camera->angle_around_target  = camera->angle_around_target - 360;}
+    if (camera->angle_around_target < 0) {camera->angle_around_target  = camera->angle_around_target + 360;}
+
+     if (hold.c[0].C_down) {camera->pitch -= 5.0f;}
     if (hold.c[0].C_up) {camera->pitch += 5.0f;}
-
-    if (camera->angle_around_target > 360) {camera->angle_around_target  = 0;}
-    if (camera->angle_around_target < 0) {camera->angle_around_target  = 360;}
-
-    if (camera->angle_around_target  > 360) {camera->angle_around_target  = 0;}
-    if (camera->angle_around_target  < 0) {camera->angle_around_target  = 360;}
 
     if (camera->pitch > 85) {camera->pitch = 85;}
     if (camera->pitch < -85) {camera->pitch = -85;}

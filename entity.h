@@ -11,18 +11,19 @@
 typedef enum {
 
 	NICK
+	
 } entity_type_t;
 
 
 typedef enum { 
 
+	STAND,
+	CROUCH,
 	WALK,
 	RUN,
 	ROLL,
-	JUMP,
-	FALL,
-	CROUCH,
-	STAND
+	JUMP
+
 } entity_state_t;
 
 

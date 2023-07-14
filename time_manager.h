@@ -13,19 +13,19 @@ typedef struct{
 
 float get_time(){
 
-    float time = timer_ticks() / 100000000.f;
-    return time;
+    float time_in_seconds = TIMER_MICROS(timer_ticks()) / 1000000.f;
+    return time_in_seconds;
 }
 
 float cycles_to_sec(float cycles){
 
-    float time = cycles / 100000000.f;
+    float time = cycles / 1000000.f;
     return time;
 }
 
 void time_management(time_data_t *time_data){
 
-    time_data->cur_frame = timer_ticks();
+    time_data->cur_frame = TIMER_MICROS(timer_ticks());
 
     time_data->frame_duration = cycles_to_sec(time_data->cur_frame - time_data->last_frame);
 

@@ -6,14 +6,14 @@
 #include <math.h>
 
 #include "sausage64.h"
-#include "time.h"
+#include "time_manager.h"
 #include "projection_matrix.h"
 #include "render.h"
 #include "environment.h"
 #include "materials.h"
 #include "entity.h"
 #include "nick.h"
-#include "state.h"
+#include "state_manager.h"
 #include "camera.h"
 #include "controls.h"
 
@@ -135,16 +135,18 @@ void render(){
     rdpq_font_begin(RGBA32(0xED, 0xAE, 0x49, 0xFF));
 
     rdpq_font_position(5, 10);
-    rdpq_font_printf(font, "FPS: %f\n", time_data.FPS);
+    rdpq_font_printf(font, "Time: %f\n", get_time());
 
     rdpq_font_position(5, 20);
-    rdpq_font_printf(font, ": %f\n", nick.target_yaw);
+    rdpq_font_printf(font, "FPS: %f\n", time_data.FPS);
 
+    /*
     rdpq_font_position(5, 30);
     rdpq_font_printf(font, ": %d\n", nick.new_state);
 
     rdpq_font_position(5, 40);
     rdpq_font_printf(font, ": %f\n", nick.target_speed[0]);
+    */
     
     rdpq_font_end();
 
@@ -193,7 +195,7 @@ int main(){
 
         move_camera_p2_stick(hold, &camera);
 
-        sausage64_advance_anim(&nick.model, 2.0f);
+        sausage64_advance_anim(&nick.model, 30 / time_data.FPS);
 
         move_camera_zoom(hold, &camera);
         set_camera_position(&camera, nick);
